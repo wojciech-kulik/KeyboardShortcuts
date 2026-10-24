@@ -6,6 +6,9 @@ import Foundation
 Global keyboard shortcuts for your macOS app.
 */
 public enum KeyboardShortcuts {
+	public static var onPausedKeyDown: ((Shortcut) -> Void)?
+	public static var onPausedKeyUp: ((Shortcut) -> Void)?
+
 	/**
 	The result of validating a keyboard shortcut.
 	*/
@@ -487,6 +490,11 @@ public enum KeyboardShortcuts {
 
 	private static func handleKeyEvent(_ eventType: EventType, for shortcut: Shortcut) {
 		guard !isPaused else {
+			if eventType == .keyDown {
+				onPausedKeyDown?(shortcut)
+			} else if eventType == .keyUp {
+				onPausedKeyUp?(shortcut)
+			}
 			return
 		}
 
